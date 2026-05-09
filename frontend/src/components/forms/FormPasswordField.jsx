@@ -1,30 +1,18 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import * as React from "react";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Controller } from "react-hook-form";
+import FormHelperText from "@mui/material/FormHelperText";
 
-export default function FormPasswordField() {
-  const outlinedStartId = React.useId();
-  const outlinedWeightId = React.useId();
+export default function FormPasswordField(props) {
+  const { label, name, control } = props;
+
   const outlinedPasswordId = React.useId();
-  const outlinedAmountId = React.useId();
-  const filledStartId = React.useId();
-  const filledWeightId = React.useId();
-  const filledPasswordId = React.useId();
-  const filledAmountId = React.useId();
-  const standardStartId = React.useId();
-  const standardWeightId = React.useId();
-  const standardPasswordId = React.useId();
-  const standardAmountId = React.useId();
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -38,41 +26,29 @@ export default function FormPasswordField() {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-      <div>
-        <TextField
-          label="With normal TextField"
-          id={`${outlinedStartId}-input`}
-          sx={{ m: 1, width: '25ch' }}
-          slotProps={{
-            input: {
-              startAdornment: <InputAdornment position="start">kg</InputAdornment>,
-            },
-          }}
-        />
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+    <Controller
+      name={name}
+      control={control}
+      render={({
+        field: { onChange, value },
+        fieldState: { error },
+        formState,
+      }) => (
+        <FormControl variant="outlined" className="myForm">
+          <InputLabel htmlFor={`${outlinedPasswordId}-input`}>
+            {label}
+          </InputLabel>
           <OutlinedInput
-            id={`${outlinedWeightId}-input`}
-            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-            aria-describedby={`${outlinedWeightId}-helper-text`}
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-          <FormHelperText id={`${outlinedWeightId}-helper-text`}>
-            Weight
-          </FormHelperText>
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel htmlFor={`${outlinedPasswordId}-input`}>Password</InputLabel>
-          <OutlinedInput
+            onChange={onChange}
+            value={value}
+            error={!!error}
             id={`${outlinedPasswordId}-input`}
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label={
-                    showPassword ? 'hide the password' : 'display the password'
+                    showPassword ? "hide the password" : "display the password"
                   }
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
@@ -83,127 +59,13 @@ export default function FormPasswordField() {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
+            label={label}
           />
+          <FormHelperText sx={{
+            color: '#d32f2f'
+          }}>{error?.message}</FormHelperText>
         </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor={`${outlinedAmountId}-input`}>Amount</InputLabel>
-          <OutlinedInput
-            id={`${outlinedAmountId}-input`}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            label="Amount"
-          />
-        </FormControl>
-      </div>
-      <div>
-        <TextField
-          label="With normal TextField"
-          id={`${filledStartId}-input`}
-          sx={{ m: 1, width: '25ch' }}
-          slotProps={{
-            input: {
-              startAdornment: <InputAdornment position="start">kg</InputAdornment>,
-            },
-          }}
-          variant="filled"
-        />
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
-          <FilledInput
-            id={`${filledWeightId}-input`}
-            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-            aria-describedby={`${filledWeightId}-helper-text`}
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-          <FormHelperText id={`${filledWeightId}-helper-text`}>
-            Weight
-          </FormHelperText>
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
-          <InputLabel htmlFor={`${filledPasswordId}-input`}>Password</InputLabel>
-          <FilledInput
-            id={`${filledPasswordId}-input`}
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label={
-                    showPassword ? 'hide the password' : 'display the password'
-                  }
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  onMouseUp={handleMouseUpPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }} variant="filled">
-          <InputLabel htmlFor={`${filledAmountId}-input`}>Amount</InputLabel>
-          <FilledInput
-            id={`${filledAmountId}-input`}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          />
-        </FormControl>
-      </div>
-      <div>
-        <TextField
-          label="With normal TextField"
-          id={`${standardStartId}-input`}
-          sx={{ m: 1, width: '25ch' }}
-          slotProps={{
-            input: {
-              startAdornment: <InputAdornment position="start">kg</InputAdornment>,
-            },
-          }}
-          variant="standard"
-        />
-        <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-          <Input
-            id={`${standardWeightId}-input`}
-            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-            aria-describedby={`${standardWeightId}-helper-text`}
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-          <FormHelperText id={`${standardWeightId}-helper-text`}>
-            Weight
-          </FormHelperText>
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-          <InputLabel htmlFor={`${standardPasswordId}-input`}>Password</InputLabel>
-          <Input
-            id={`${standardPasswordId}-input`}
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label={
-                    showPassword ? 'hide the password' : 'display the password'
-                  }
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  onMouseUp={handleMouseUpPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-          <InputLabel htmlFor={`${standardAmountId}-input`}>Amount</InputLabel>
-          <Input
-            id={`${standardAmountId}-input`}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          />
-        </FormControl>
-      </div>
-    </Box>
+      )}
+    />
   );
 }

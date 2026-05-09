@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # packages
     'rest_framework',
     'corsheaders',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -41,6 +42,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
+
+AUTHENTICATION_BACKENDS = [
+    'users.auth_backend.EmailAuthBackend',
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 ROOT_URLCONF = 'auth.urls'
