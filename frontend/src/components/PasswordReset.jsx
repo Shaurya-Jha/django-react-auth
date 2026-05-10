@@ -1,32 +1,35 @@
 import "../index.css";
 import Box from "@mui/material/Box";
-import FormTextField from "./forms/FormTextField";
-import FormPasswordField from "./forms/FormPasswordField";
 import FormButton from "./forms/FormButton";
-import { Link, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import AxiosInstance from "./axiosInstance";
 import { useState } from "react";
 import Message from "./Message";
+import FormPasswordField from "./forms/FormPasswordField";
 
-function Login() {
+function PasswordReset() {
+  // state management
   const [showMessage, setShowMessage] = useState(false);
+
   const navigate = useNavigate();
+  const { token } = useParams();
 
   const { handleSubmit, control } = useForm();
 
   const submitForm = (data) => {
-    AxiosInstance.post("login", {
-      email: data.email,
+    AxiosInstance.post("api/password_reset/confirm/", {
       password: data.password,
+      token: token,
     })
-      .then((res) => {
-        if (res.status == 200) {
-          localStorage.setItem("Token", res.data.token);
-          navigate("/home");
-        }
+      .then(() => {
+        setShowMessage(true);
+
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
       })
-      .catch(() => setShowMessage(true));
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -34,40 +37,35 @@ function Login() {
       {showMessage ? (
         <Message
           color={"#69C9AB"}
-          text={"Login has failed, please try again, or reset your password"}
+          text={
+            "Your password reset was successfull. You will be redirected to login page shortly."
+          }
         />
       ) : null}
       <form onSubmit={handleSubmit(submitForm)}>
         <Box className="whiteBox">
           <Box className="itemBox">
-            <Box className="title">Login</Box>
-          </Box>
-
-          <Box className="itemBox">
-            <FormTextField
-              name="email"
-              control={control}
-              label={"Form email"}
-            />
+            <Box className="title">Reset Password</Box>
           </Box>
 
           <Box className="itemBox">
             <FormPasswordField
               name="password"
+              label="Password"
               control={control}
-              label={"Password"}
             />
           </Box>
 
           <Box className="itemBox">
-            <FormButton type={"submit"} label={"Login"} />
+            <FormPasswordField
+              name="confirmPassword"
+              label="Confirm password"
+              control={control}
+            />
           </Box>
 
-          <Box className="itemBox" sx={{ flexDirection: "column", gap: 2 }}>
-            <Link to="/register">No account yet? Please register</Link>
-            <Link to="/request/password_reset">
-              Forgot Password? Click here!
-            </Link>
+          <Box className="itemBox">
+            <FormButton type={"submit"} label={"Reset Password"} />
           </Box>
         </Box>
       </form>
@@ -75,4 +73,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default PasswordReset;
